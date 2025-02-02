@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <body background="sfondo.jpg">
+        <img src="sfondo.jpg" width="1000">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0 blue;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white blue;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        /* General body styling */
+                    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Resizer</h1>
+        <input type="file" id="imageInput" accept="image/*">
+        <br>
+        <input type="number" id="widthInput" placeholder="Width (px)" disabled>
+        <input type="number" id="heightInput" placeholder="Height (px)" disabled>
+        <br>
+        <button id="resizeButton" onclick="resizeImage()" disabled>Resize Image</button>
+        <br>
+        <h3>Resized Image:</h3>
+        <img id="resizedImage" src="" alt="Resized Image will appear here">
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const widthInput = document.getElementById('widthInput');
+        const heightInput = document.getElementById('heightInput');
+        const resizeButton = document.getElementById('resizeButton');
+        const resizedImage = document.getElementById('resizedImage');
+
+        let originalImage = null;
+
+        // Handle image upload
+        imageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    originalImage = new Image();
+                    originalImage.src = e.target.result;
+                    originalImage.onload = function () {
+                        widthInput.disabled = false;
+                        heightInput.disabled = false;
+                        resizeButton.disabled = false;
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Resize the image
+        function resizeImage() {
+            const newWidth = parseInt(widthInput.value);
+            const newHeight = parseInt(heightInput.value);
+
+            if (isNaN(newWidth) || isNaN(newHeight) || newWidth <= 0 || newHeight <= 0) {
+                alert("Please enter valid width and height.");
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+            ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+
+            const resizedDataUrl = canvas.toDataURL();
+            resizedImage.src = resizedDataUrl;
+        }
+    </script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+               <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              background-color: #f4f4f4;
+            }
+            .container {
+              background-color: white;
+              padding: 20px;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              border-radius: 8px;
+            }
+            h2 {
+              text-align: center;
+            }
+            .form-group {
+              margin-bottom: 15px;
+            }
+            input[type="text"], input[type="password"], input[type="file"], input[type="number"] {
+              width: 100%;
+              padding: 8px;
+              margin-top: 5px;
+              border-radius: 4px;
+              border: 1px solid #ccc;
+            }
+            button {
+              width: 100%;
+              padding: 10px;
+              background-color: #4CAF50;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            }
+            button:hover {
+              background-color: #45a049;
+            }
+            .resize-section {
+              display: none;
+            }
+            .image-preview {
+              max-width: 100%;
+              height: auto;
+              margin: 20px 0;
+            }
+          </style>
+        </head>
+        <body>
+        
+          <!-- Sign Up Form -->
+          <div class="container" id="signupForm">
+            <h2>Sign Up</h2>
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" required>
+            </div>
+            <button id="signupButton">Sign Up</button>
+          </div>
+        
+          <!-- Image Resizing Section (only accessible after signup) -->
+          <div class="container resize-section" id="resizeSection">
+            <h2>Upload and Resize Image</h2>
+            <input type="file" id="imageInput" accept="image/*" />
+            <br><br>
+            <img id="imagePreview" class="image-preview" alt="Image Preview" />
+            <br>
+            <label for="width">Width:</label>
+            <input type="number" id="width" min="1" placeholder="Width in px">
+            <label for="height">Height:</label>
+            <input type="number" id="height" min="1" placeholder="Height in px">
+            <button id="resizeButton">Resize Image</button>
+            <br><br>
+            <a id="downloadLink" href="#" style="display: none;" download>Download Resized Image</a>
+          </div>
+        
+          <script>
+            let isSignedUp = false;
+        
+            // Handle Sign Up
+            document.getElementById('signupButton').addEventListener('click', () => {
+              const username = document.getElementById('username').value;
+              const password = document.getElementById('password').value;
+              
+              if (username && password) {
+                isSignedUp = true;
+                alert("Sign up successful!");
+                
+                // Hide SignUp Form and show Resize Section
+                document.getElementById('signupForm').style.display = 'none';
+                document.getElementById('resizeSection').style.display = 'block';
+              } else {
+                alert("Please fill out all fields!");
+              }
+            });
+        
+            // Handle Image Upload
+            document.getElementById('imageInput').addEventListener('change', (event) => {
+              const file = event.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                  const img = new Image();
+                  img.src = reader.result;
+                  img.onload = function() {
+                    document.getElementById('imagePreview').src = img.src;
+                  };
+                };
+                reader.readAsDataURL(file);
+              }
+            });
+        
+            // Handle Image Resize
+            document.getElementById('resizeButton').addEventListener('click', () => {
+              if (!isSignedUp) {
+                alert("You need to sign up to resize images!");
+                return;
+              }
+        
+              const width = parseInt(document.getElementById('width').value);
+              const height = parseInt(document.getElementById('height').value);
+              const image = document.getElementById('imagePreview');
+        
+              if (width && height && image.src) {
+                // Create a canvas to resize the image
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(image, 0, 0, width, height);
+                
+                const resizedImageURL = canvas.toDataURL('image/png');
+                
+                // Update the preview and allow download
+                document.getElementById('imagePreview').src = resizedImageURL;
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = resizedImageURL;
+                downloadLink.style.display = 'block';
+              } else {
+                alert("Please select an image and provide both width and height!");
+              }
+            });
+          </script>
+</body>
+</html>
